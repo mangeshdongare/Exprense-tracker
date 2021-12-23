@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import NewExpense from './components/NewExpenses/NewExpense';
+import Expenses from './components/Expenses/Expenses';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+let DUMMY_EXPENSE = [];
 
+const App = () => {
+	const [expenses, setExpenses] = useState(DUMMY_EXPENSE);
+
+	useEffect(() => {
+		setExpenses(JSON.parse(localStorage.getItem('Expenses') || '[]'));
+	}, []);
+
+	const addExpenseHandler = (expense) => {
+		const updatedExpense = [expense, ...expenses];
+		setExpenses(updatedExpense);
+		localStorage.setItem('Expenses', JSON.stringify(updatedExpense));
+	};
+
+	return (
+		<div>
+			<NewExpense onAddExpense={addExpenseHandler} />
+			<Expenses item={expenses} />
+		</div>
+	);
+};
 export default App;
